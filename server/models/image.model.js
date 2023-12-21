@@ -7,7 +7,7 @@ const imageSchema = new Schema(
       required: true,
     },
     owner: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   },
