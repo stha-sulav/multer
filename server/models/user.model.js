@@ -21,7 +21,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Image" }],
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     avatar: {
       type: String,
     },

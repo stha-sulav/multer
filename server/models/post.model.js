@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const imageSchema = new Schema(
+const postSchema = new Schema(
   {
     name: {
       type: String,
@@ -14,4 +14,4 @@ const imageSchema = new Schema(
   { timestamps: true }
 );
 
-export const Image = mongoose.model("Image", imageSchema);
+export const Post = mongoose.model("Post", postSchema);
