@@ -2,10 +2,14 @@ import mongoose, { Schema } from "mongoose";
 
 const postSchema = new Schema(
   {
-    name: {
+    caption: {
       type: String,
-      required: true,
     },
+    images: [
+      {
+        type: String,
+      },
+    ],
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
