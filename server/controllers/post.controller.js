@@ -10,7 +10,10 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 @access Private
 */
 const getAllPosts = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "All good from all posts" });
+  const posts = await Post.find({});
+  res
+    .status(200)
+    .json(new ApiResponse(200, posts, "Posts fectched successfully"));
 });
 
 /*
@@ -19,7 +22,15 @@ const getAllPosts = asyncHandler(async (req, res) => {
 @access Private
 */
 const getPost = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "All good from post by id" });
+  const { postId } = req.params;
+
+  const post = await Post.findById({ _id: postId });
+
+  if (!post) {
+    throw new ApiError(404, "404 Not Found");
+  }
+
+  res.status(200).json(new ApiResponse(200, post, "Post found"));
 });
 
 /*
