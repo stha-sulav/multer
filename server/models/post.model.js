@@ -7,7 +7,14 @@ const postSchema = new Schema(
     },
     images: [
       {
-        type: String,
+        image_url: {
+          type: String,
+          required: true,
+        },
+        image_id: {
+          type: String,
+          required: true,
+        },
       },
     ],
     owner: {

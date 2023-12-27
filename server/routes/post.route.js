@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createPost,
+  deletePost,
   getAllPosts,
   getPost,
 } from "../controllers/post.controller.js";
@@ -13,6 +14,6 @@ router
   .get(getAllPosts)
   .post(upload.fields([{ name: "posts", maxCount: 8 }]), createPost);
 
-router.get("/:postId", getPost);
+router.route("/:postId").get(getPost).delete(deletePost);
 
 export default router;

@@ -1,6 +1,9 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../utils/cloudinary.js";
 import { Post } from "../models/post.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
@@ -57,7 +60,7 @@ const createPost = asyncHandler(async (req, res) => {
       if (!uploadPost) {
         throw new ApiError(400, "Atleast one image need to be selected");
       }
-      return uploadPost.url;
+      return uploadPost;
     })
   );
 
@@ -88,7 +91,35 @@ const updatePost = asyncHandler(async (req, res) => {
 @access Private
 */
 const deletePost = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "All good from delete post" });
+  const { postId } = req.params;
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    throw new ApiError(404, "No posts found");
+  }
+
+  const isImagesDelete = await Promise.all(
+    post?.images?.map(async (image) => {
+      const isDeleted = await deleteFromCloudinary(image.image_id);
+      if (isDeleted.result !== "ok") {
+        return false;
+      }
+      return true;
+    })
+  );
+
+  if (!isImagesDelete.every((result) => result === true)) {
+    throw new ApiError(404, "No posts found");
+  }
+
+  const oldPost = await Post.findByIdAndDelete(post._id);
+
+  if (!oldPost) {
+    throw new ApiError(400, "Could not delete posts");
+  }
+
+  res.status(200).json(new ApiResponse(200, [], "Deleted successfully"));
 });
 
 export { getAllPosts, getPost, updatePost, deletePost, createPost };
