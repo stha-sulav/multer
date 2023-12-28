@@ -82,7 +82,28 @@ const createPost = asyncHandler(async (req, res) => {
 @access Private
 */
 const updatePost = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "All good from update post" });
+  const { postId } = req.params;
+  const { caption } = req.body;
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    throw new ApiError(404, "Post not found");
+  }
+
+  const updatedPost = await Post.findByIdAndUpdate(
+    post._id,
+    { caption },
+    { new: true }
+  );
+
+  if (!updatedPost) {
+    throw new ApiError(400, "Canot update post");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, updatedPost, "Successfully updated"));
 });
 
 /*
@@ -121,5 +142,25 @@ const deletePost = asyncHandler(async (req, res) => {
 
   res.status(200).json(new ApiResponse(200, [], "Deleted successfully"));
 });
+
+/*
+@desc delete Image
+@route DELETE /posts/:id
+@access Private
+*/
+
+// const deleteImage = asyncHandler(async (req, res) => {
+//   const postId = req.params;
+//   const {image_id} = req.body;
+
+//   const post = await Post.findById(postId);
+
+//   if (!post) {
+//     throw new ApiError(404, "Post not found");
+//   }
+
+//   const updatedPost =
+
+// });
 
 export { getAllPosts, getPost, updatePost, deletePost, createPost };

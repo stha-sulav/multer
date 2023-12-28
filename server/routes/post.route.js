@@ -4,6 +4,7 @@ import {
   deletePost,
   getAllPosts,
   getPost,
+  updatePost,
 } from "../controllers/post.controller.js";
 import { upload } from "../middlewares/multer.middlware.js";
 
@@ -14,6 +15,6 @@ router
   .get(getAllPosts)
   .post(upload.fields([{ name: "posts", maxCount: 8 }]), createPost);
 
-router.route("/:postId").get(getPost).delete(deletePost);
+router.route("/:postId").get(getPost).put(updatePost).delete(deletePost);
 
 export default router;
